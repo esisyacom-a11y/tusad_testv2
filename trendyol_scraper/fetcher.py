@@ -1,28 +1,37 @@
-import os
-from config import KATEGORILER
-from driver import get_driver
-from downloader import ImageDownloader
-from category_scraper import CategoryScraper
-"""HTML SAYFASINI REQUESTS VEYA SELENIUM İLE ÇEKER."""
-def run_scraper():
-    ana_klasor = "Trendyol_Urunler"
-    os.makedirs(ana_klasor, exist_ok=True)
+# trendyol_scraper/fetcher.py
+import requests
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
+from .config import PRODUCT_CONTAINER_CSS, PRODUCT_CARD_CSS, TIMEOUT
 
-    driver = get_driver(headless=True)
-    downloader = ImageDownloader()
+class PageFetcher:
+    """Sayfa içeriği çekme işlemlerini yönetir."""
 
-    try:
-        for kategori_adi, kategori_url in KATEGORILER.items():
-            scraper = CategoryScraper(
-                kategori_adi=kategori_adi,
-                kategori_url=kategori_url,
-                ana_klasor=ana_klasor,
-                driver=driver,
-                downloader=downloader
+    def __init__(self, driver):
+        self.driver = driver
+
+    def get_dynamic_page(self, url):
+        """Selenium kullanarak dinamik sayfayı çeker."""
+        self.driver.get(url)
+        try:
+            WebDriverWait(self.driver, TIMEOUT).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, PRODUCT_CONTAINER_CSS))
             )
-            scraper.scrape(limit=5)
-    finally:
-        driver.quit()
+            WebDriverWait(self.driver, TIMEOUT).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, PRODUCT_CARD_CSS))
+            )
+            return self.driver.page_source
+        except TimeoutException:
+            print(f"  Sayfa yüklenemedi: {url}")
+            return None
 
-if __name__ == "__main__":
-    run_scraper()
+    def get_static_page(self, url):
+        """Requests kullanarak statik bir sayfanın HTML'ini çeker."""
+        try:
+            response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
+            return response.text
+        except Exception as e:
+            print(f"   Statik sayfa çekilirken hata oluştu: {e}")
+            return None

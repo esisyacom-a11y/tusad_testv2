@@ -1,29 +1,47 @@
+# main.py
+import sys
+import pandas as pd
 import os
-from config import KATEGORILER
-from driver import get_driver
-from downloader import ImageDownloader
-from category_scraper import CategoryScraper
-"""KULLANICIDAN ARAMA TERİMİ ALIR VE SCRAPING SÜRECİNİ BAŞLATIR."""
+from trendyol_scraper.driver import WebDriverManager
+from trendyol_scraper.downloader import ImageDownloader
+from trendyol_scraper.search_scraper import SearchScraper
+from trendyol_scraper.config import BASE_URL, EXCEL_FILE_PATH, MAIN_FOLDER
 
-def run_scraper():
-    ana_klasor = "Trendyol_Urunler"
-    os.makedirs(ana_klasor, exist_ok=True)
 
-    driver = get_driver(headless=True)
+def main():
+    try:
+        df = pd.read_excel(EXCEL_FILE_PATH)
+        search_list = [str(item).lower().strip() for item in df['Kategori'].tolist() if pd.notna(item)]
+        if not search_list:
+            print("Excel dosyasında kategori bulunamadı. Lütfen 'Kategori' sütununu doldurun.")
+            sys.exit()
+        else:
+            print("Kategoriler Excel dosyasından başarıyla yüklendi.")
+
+    except FileNotFoundError:
+        print(f"Hata: '{EXCEL_FILE_PATH}' dosyası bulunamadı. Lütfen dosyayı doğru konuma yerleştirin.")
+        sys.exit()
+    except Exception as e:
+        print(f"Hata: Dosya okunurken bir hata oluştu: {e}")
+        sys.exit()
+
+    driver_manager = WebDriverManager()
     downloader = ImageDownloader()
 
     try:
-        for kategori_adi, kategori_url in KATEGORILER.items():
-            scraper = CategoryScraper(
-                kategori_adi=kategori_adi,
-                kategori_url=kategori_url,
-                ana_klasor=ana_klasor,
-                driver=driver,
-                downloader=downloader
-            )
+        driver = driver_manager.get_driver()
+        driver.get(BASE_URL)
+        driver_manager.accept_cookies()
+
+        os.makedirs(MAIN_FOLDER, exist_ok=True)
+
+        for arama_terimi in search_list:
+            scraper = SearchScraper(arama_terimi, driver, downloader)
             scraper.scrape(limit=5)
     finally:
-        driver.quit()
+        driver_manager.quit_driver()
+        print("Tarayıcı kapatıldı. İşlem tamamlandı.")
+
 
 if __name__ == "__main__":
-    run_scraper()
+    main()

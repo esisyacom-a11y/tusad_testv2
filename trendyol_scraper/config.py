@@ -1,8 +1,27 @@
-KATEGORILER = {
-    "Yelek": "https://www.trendyol.com/kadin-ceket-yelek-x-g1-c104153",
-    "Ceket": "https://www.trendyol.com/kadin-ceket-x-g1-c1030",
-    "Abiye": "https://www.trendyol.com/abiye-elbise-x-c55",
-    "Pantolon": "https://www.trendyol.com/kadin-pantolon-x-g1-c70",
-    "Gömlek": "https://www.trendyol.com/kadin-gomlek-x-c75",
-    "Elbise": "https://www.trendyol.com/kadin-elbise-x-c56"
-}
+# trendyol_scraper/config.py
+import os
+
+# Sabit Değerler
+TIMEOUT = 30
+MAX_RETRY = 3
+RETRY_WAIT = 5
+PRODUCT_LIMIT_PER_SEARCH = 5
+
+# URL'ler
+BASE_URL = "https://www.trendyol.com"
+SEARCH_URL = "https://www.trendyol.com/sr?q={}"
+
+# Klasör ve dosya isimleri
+MAIN_FOLDER = "Trendyol_Urunler"
+EXCEL_FILE_PATH = r"C:\Users\esisy\Downloads\Başlıksız e-tablo (2).xlsx"
+
+# Seçiciler (Selectors)
+COOKIE_ACCEPT_BUTTON_ID = 'onetrust-accept-btn-handler'
+PRODUCT_CONTAINER_CSS = "div.prdct-cntnr-wrppr"
+PRODUCT_CARD_CSS = "div.p-card-wrppr"
+PRODUCT_LINK_CLASS = "p-card-chldrn-cntnr"
+PRODUCT_IMAGE_TAG = "img"
+PRODUCT_TITLE_CSS = "h1.product-title"
+BRAND_NAME_CSS = "strong"
+SELLER_NAME_CSS = "div.merchant-name"
+SELLER_RATING_CSS = "div.score-badge"
