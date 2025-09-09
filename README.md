@@ -7,26 +7,19 @@ Modüler ve genişletilebilir bir veri çekme mimarisi. Arama terimi bazlı scra
 
 TUSAD/ 
     ├── trendyol_scraper/      
-    # Kod modülleri (.py dosyaları) │   
-        ├── driver.py │   
-        ├── fetcher.py │   
-        ├── parser.py │   
-        ├── downloader.py │   
-        ├── search_scraper.py │   
-        ├── config.py │   
+        ├── driver.py           │   
+        ├── fetcher.py          │   
+        ├── parser.py           │   
+        ├── downloader.py       │   
+        ├── search_scraper.py   │   
+        ├── config.py           │   
         └── init.py 
     ├── Trendyol_Urunler/      
-    # Çıktı klasörü (görseller + JSON) 
-    ├── venv/                   
-    # Sanal ortam (gitignore ile dışlanır) 
-    ├── main.py                 
-    # Başlatıcı dosya 
-    ├── .gitignore              
-    # Gereksiz dosya dışlama kuralları 
-    ├── README.md               
-    # Proje açıklaması 
-    ├── requirements.tx
-
+    ├── venv/           # Çıktı klasörü (görseller + JSON)                   
+    ├── main.py         # Sanal ortam (gitignore ile dışlanır) 
+    ├── .gitignore      # Başlatıcı dosya 
+    ├── README.md       # Gereksiz dosya dışlama kuralları           
+    ├── requirements.tx # Proje açıklaması 
 
 ## ⚙️ KURULUM
 
@@ -50,6 +43,7 @@ python main.py
 - JSON formatında kaydeder
 
 ## 🧩 MODÜLLER
+
 |  |  | 
 | main.py |  | 
 | driver.py |  | 
@@ -62,6 +56,7 @@ python main.py
 
 
 ## 📦 ÇIKTI ÖRNEĞİ
+
 Trendyol_Urunler/
 ├── Elbise/
 │   ├── Elbise_0.jpg
@@ -79,4 +74,4 @@ Trendyol_Urunler/
 ## 👤 YAZAR
 Esisya
 Avrupa moda e-ticaretinde otomasyon ve veri çıkarımı uzmanı
-Scraping pipeline ve modül mimarisi üzerine üretime dönük çözümler geliştirir
+Scraping pipeline ve modül mimarisi üzerine üretime dönük çözümler geliştirir..
