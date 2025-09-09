@@ -13,13 +13,13 @@ TUSAD/
         ├── downloader.py       │   
         ├── search_scraper.py   │   
         ├── config.py           │   
-        └── init.py 
-    ├── Trendyol_Urunler/      
-    ├── venv/           # Çıktı klasörü (görseller + JSON)                   
-    ├── main.py         # Sanal ortam (gitignore ile dışlanır) 
-    ├── .gitignore      # Başlatıcı dosya 
-    ├── README.md       # Gereksiz dosya dışlama kuralları           
-    ├── requirements.tx # Proje açıklaması 
+        └── init.py             │
+    ├── Trendyol_Urunler/       │   
+    ├── venv/           # Çıktı klasörü (görseller + JSON)      │             
+    ├── main.py         # Sanal ortam (gitignore ile dışlanır)  │
+    ├── .gitignore      # Başlatıcı dosya                       │
+    ├── README.md       # Gereksiz dosya dışlama kuralları      │       
+    ├── requirements.tx # Proje açıklaması                      │ 
 
 ## ⚙️ KURULUM
 
