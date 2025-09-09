@@ -1,0 +1,72 @@
+[
+    {
+        "ScrapingDate": "2025-09-09 10:05:20",
+        "URL": "https://www.trendyol.com/h-m/kusakli-blazer-p-978415404",
+        "ProductName": "H&M Kuşaklı Blazer",
+        "Brand": "H&M",
+        "Product": "Kuşaklı Blazer",
+        "Seller": "H&M",
+        "Seller-rating": "8.6",
+        "Price": "1499.00 TL",
+        "Discount": null,
+        "Rating": null,
+        "Review Count": null,
+        "image_path": "Trendyol_Urunler\\Yelek\\Yelek_0.jpg"
+    },
+    {
+        "ScrapingDate": "2025-09-09 10:05:21",
+        "URL": "https://www.trendyol.com/u-s-polo-assn/kadin-lacivert-yelek-50254455-vr033-p-849288195",
+        "ProductName": "U.S. Polo Assn. Kadın Lacivert Yelek 50254455-VR033",
+        "Brand": "U.S. Polo Assn.",
+        "Product": "Kadın Lacivert Yelek 50254455-VR033",
+        "Seller": "U.S. Polo Assn.",
+        "Seller-rating": "8.6",
+        "Price": "1202.47 TL",
+        "Discount": null,
+        "Rating": 4.8,
+        "Review Count": 14,
+        "image_path": "Trendyol_Urunler\\Yelek\\Yelek_1.jpg"
+    },
+    {
+        "ScrapingDate": "2025-09-09 10:05:22",
+        "URL": "https://www.trendyol.com/lovelyistanbul/kemerli-kruvaze-yaka-dokuma-yelek-kahverengi-lrv0095-p-937868920",
+        "ProductName": "Lovelyİstanbul Kemerli Kruvaze Yaka Dokuma Yelek KAHVERENGİ LRV0095",
+        "Brand": "Lovelyİstanbul",
+        "Product": "Kemerli Kruvaze Yaka Dokuma Yelek KAHVERENGİ LRV0095",
+        "Seller": "Lovely İstanbul",
+        "Seller-rating": "9.1",
+        "Price": null,
+        "Discount": null,
+        "Rating": null,
+        "Review Count": null,
+        "image_path": "Trendyol_Urunler\\Yelek\\Yelek_2.jpg"
+    },
+    {
+        "ScrapingDate": "2025-09-09 10:05:23",
+        "URL": "https://www.trendyol.com/lovelyistanbul/sik-dugmeli-kusakli-dokuma-yelek-siyah-lrv0096-p-937885752",
+        "ProductName": "Lovelyİstanbul Şık Düğmeli Kuşaklı Dokuma Yelek SİYAH LRV0096",
+        "Brand": "Lovelyİstanbul",
+        "Product": "Şık Düğmeli Kuşaklı Dokuma Yelek SİYAH LRV0096",
+        "Seller": "Lovely İstanbul",
+        "Seller-rating": "9.1",
+        "Price": null,
+        "Discount": null,
+        "Rating": null,
+        "Review Count": null,
+        "image_path": "Trendyol_Urunler\\Yelek\\Yelek_3.jpg"
+    },
+    {
+        "ScrapingDate": "2025-09-09 10:05:23",
+        "URL": "https://www.trendyol.com/modaplaza/kadin-arkasi-kemerli-yelek-6796-p-948448568",
+        "ProductName": "ModaPlaza Kadın Arkası Kemerli Yelek 6796",
+        "Brand": "ModaPlaza",
+        "Product": "Kadın Arkası Kemerli Yelek 6796",
+        "Seller": "Modaplaza",
+        "Seller-rating": "9",
+        "Price": null,
+        "Discount": null,
+        "Rating": null,
+        "Review Count": null,
+        "image_path": "Trendyol_Urunler\\Yelek\\Yelek_4.jpg"
+    }
+]
