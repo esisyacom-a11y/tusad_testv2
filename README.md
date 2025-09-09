@@ -5,21 +5,21 @@ Modüler ve genişletilebilir bir veri çekme mimarisi. Arama terimi bazlı scra
 
 ## 📁 DOSYA YAPISI
 
-TUSAD/ 
-    ├── trendyol_scraper/      
-        ├── driver.py           │   
-        ├── fetcher.py          │   
-        ├── parser.py           │   
-        ├── downloader.py       │   
-        ├── search_scraper.py   │   
-        ├── config.py           │   
-        └── init.py             │
-    ├── Trendyol_Urunler/       │   
-    ├── venv/           # Çıktı klasörü (görseller + JSON)      │             
-    ├── main.py         # Sanal ortam (gitignore ile dışlanır)  │
-    ├── .gitignore      # Başlatıcı dosya                       │
-    ├── README.md       # Gereksiz dosya dışlama kuralları      │       
-    ├── requirements.tx # Proje açıklaması                      │ 
+TUSAD <br><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;├── trendyol_scraper/      
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── driver.py           
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── fetcher.py           
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── parser.py            
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── downloader.py        
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── search_scraper.py   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── config.py            
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── init.py            
+&nbsp;&nbsp;&nbsp;&nbsp;├── Trendyol_Urunler/  
+&nbsp;&nbsp;&nbsp;&nbsp;├── venv/             
+&nbsp;&nbsp;&nbsp;&nbsp;├── main.py   
+&nbsp;&nbsp;&nbsp;&nbsp;├── .gitignore               
+&nbsp;&nbsp;&nbsp;&nbsp;├── README.md           
+&nbsp;&nbsp;&nbsp;&nbsp;├── requirements.tx            
 
 ## ⚙️ KURULUM
 
@@ -43,25 +43,24 @@ python main.py
 - JSON formatında kaydeder
 
 ## 🧩 MODÜLLER
-
-|  |  | 
-| main.py |  | 
-| driver.py |  | 
-| fetcher.py |  | 
-| parser.py |  | 
-| downloader.py |  | 
-| search_scraper.py |  | 
-| config.py |  | 
-| __init__.py |  | 
+      
+| main.py             |      
+| driver.py           |      
+| fetcher.py          |      
+| parser.py           |      
+| downloader.py       |       
+| search_scraper.py   |       
+| config.py           |       
+| __init__.py         |       
 
 
 ## 📦 ÇIKTI ÖRNEĞİ
 
-Trendyol_Urunler/
-├── Elbise/
-│   ├── Elbise_0.jpg
-│   ├── Elbise_1.jpg
-│   └── data.json
+Trendyol_Urunler/    
+&nbsp;&nbsp;&nbsp;&nbsp;├── Elbise/    
+&nbsp;&nbsp;&nbsp;&nbsp;├── Elbise_0.jpg    
+&nbsp;&nbsp;&nbsp;&nbsp;├── Elbise_1.jpg    
+&nbsp;&nbsp;&nbsp;&nbsp;└── data.json    
 
 
 
