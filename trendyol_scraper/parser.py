@@ -5,6 +5,8 @@ import datetime
 import time
 import requests
 from selenium.webdriver.common.by import By
+from trendyol_scraper.utils import get_usd_exchange_rate
+
 
 
 # NOT: Bu dosya, harici bir config dosyasına bağımlı olmadan çalışması için
@@ -124,6 +126,20 @@ class ProductParser:
 
             final_rating = rating_json if rating_json else rating
 
+            used_price = discount_json if discount_json else price_json if price_json else discount if discount else price
+            usd_rate = get_usd_exchange_rate()
+            try:
+                cleaned_price = float(
+                    used_price.replace("TL", "")
+                    .replace("₺", "")
+                    .replace(",", ".")
+                    .strip()
+                )
+                price_to_dollar = round(cleaned_price / usd_rate, 2) if usd_rate else None
+            except Exception as e:
+                print(f"     Fiyat dolar dönüşümünde hata: {e}")
+                price_to_dollar = None
+
             return {
                 "ScrapingDate": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "URL": url,
@@ -135,7 +151,8 @@ class ProductParser:
                 "Price": price_json if price_json else price,
                 "Discount": discount_json if discount_json else discount,
                 "Rating": final_rating,
-                "Review Count": review_count
+                "Review Count": review_count,
+                "PriceToDollar": price_to_dollar
             }
 
         except Exception as e:
