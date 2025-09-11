@@ -1,4 +1,5 @@
 # main.py
+import time
 import sys
 import pandas as pd
 import os
@@ -7,8 +8,8 @@ from trendyol_scraper.downloader import ImageDownloader
 from trendyol_scraper.search_scraper import SearchScraper
 from trendyol_scraper.config import BASE_URL, EXCEL_FILE_PATH, MAIN_FOLDER
 
-
 def main():
+
     try:
         df = pd.read_excel(EXCEL_FILE_PATH)
         search_list = [str(item).lower().strip() for item in df['Kategori'].tolist() if pd.notna(item)]
@@ -38,6 +39,9 @@ def main():
         for arama_terimi in search_list:
             scraper = SearchScraper(arama_terimi, driver, downloader)
             scraper.scrape(limit=5)
+
+
+
     finally:
         driver_manager.quit_driver()
         print("Tarayıcı kapatıldı. İşlem tamamlandı.")
