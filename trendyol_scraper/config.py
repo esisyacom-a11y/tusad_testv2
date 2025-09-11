@@ -13,7 +13,7 @@ SEARCH_URL = "https://www.trendyol.com/sr?q={}"
 
 # Klasör ve dosya isimleri
 MAIN_FOLDER = "Trendyol_Urunler"
-EXCEL_FILE_PATH = r"C:\Users\esisy\Downloads\Başlıksız e-tablo (2).xlsx"
+EXCEL_FILE_PATH = r"C:\Users\onder\Downloads\exc.xlsx"
 
 # Seçiciler (Selectors)
 COOKIE_ACCEPT_BUTTON_ID = 'onetrust-accept-btn-handler'
