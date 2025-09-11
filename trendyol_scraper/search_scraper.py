@@ -1,11 +1,12 @@
 # trendyol_scraper/search_scraper.py
 import os
 import re
-from bs4 import BeautifulSoup
-from .config import SEARCH_URL, PRODUCT_LIMIT_PER_SEARCH, MAIN_FOLDER
+import json
 from .downloader import ImageDownloader
 from .fetcher import PageFetcher
 from .parser import ProductParser
+from .config import PRODUCT_LIMIT_PER_SEARCH, SEARCH_URL, MAIN_FOLDER
+
 
 class SearchScraper:
     """Her bir kategori/arama sayfasını gezerek ürün verilerini çeker."""
@@ -18,7 +19,6 @@ class SearchScraper:
         self.fetcher = PageFetcher(self.driver)
         self.parser = ProductParser(self.driver)
 
-        # Arama klasörü
         self.klasor_adi = re.sub(r'[^\w\s]', '', arama_terimi).replace(" ", "_").lower()
         self.arama_klasoru = os.path.join(MAIN_FOLDER, self.klasor_adi)
         os.makedirs(self.arama_klasoru, exist_ok=True)
@@ -57,23 +57,18 @@ class SearchScraper:
                 urun_link_tag = p.find("a", {"class": "p-card-chldrn-cntnr"})
                 urun_url = "https://www.trendyol.com" + urun_link_tag.get("href")
 
-                # Ürün detay sayfası
-                self.driver.get(urun_url)
-                detail_soup = BeautifulSoup(self.driver.page_source, "html.parser")
-                thumbnails = detail_soup.find_all("img", {"class": "_carouselThumbsImage_ddecc3e"})
+                img_tag = p.find("img")
+                img_path = None
+                if img_tag and "src" in img_tag.attrs:
+                    img_url = img_tag["src"]
+                    img_name = f"{self.klasor_adi}_{product_count}.jpg"
+                    img_path = os.path.join(self.arama_klasoru, img_name)
+                    if self.downloader.download(img_url, img_path):
+                        print(f"   -> Resim kaydedildi: {img_path}")
 
-                # Resimlerin kaydedileceği klasör
-                save_folder = os.path.join(self.arama_klasoru, urun_id)
-                os.makedirs(save_folder, exist_ok=True)
-
-                # Thumbnail'ları indir
-                indirilen_resim_sayisi = self.downloader.download(thumbnails, save_folder, urun_id)
-                print(f"   {urun_id} için {indirilen_resim_sayisi} adet resim indirildi.")
-
-                # Ürün detaylarını çek
                 urun_bilgisi = self.parser.parse_product_details(urun_url)
                 if urun_bilgisi:
-                    urun_bilgisi["image_folder"] = save_folder
+                    urun_bilgisi["image_path"] = img_path
                     self.urun_datasi.append(urun_bilgisi)
                     product_count += 1
                     yeni_urun_var = True
@@ -92,6 +87,5 @@ class SearchScraper:
         json_file_name = f"{self.klasor_adi}.json"
         json_path = os.path.join(self.arama_klasoru, json_file_name)
         with open(json_path, "w", encoding="utf-8") as f:
-            import json
             json.dump(self.urun_datasi, f, ensure_ascii=False, indent=4)
         print(f"  '{self.arama_terimi}' verileri JSON'a kaydedildi: {json_path}")
