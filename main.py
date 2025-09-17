@@ -1,5 +1,4 @@
 # main.py
-import time
 import sys
 import pandas as pd
 import os

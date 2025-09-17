@@ -1,6 +1,6 @@
-# trendyol_scraper/search_scraper.py
 import os
 import re
+import json
 from bs4 import BeautifulSoup
 from .config import SEARCH_URL, PRODUCT_LIMIT_PER_SEARCH, MAIN_FOLDER
 from .downloader import ImageDownloader
@@ -18,7 +18,7 @@ class SearchScraper:
         self.fetcher = PageFetcher(self.driver)
         self.parser = ProductParser(self.driver)
 
-        # Arama klasörü
+        # Arama klasörü (resimler için)
         self.klasor_adi = re.sub(r'[^\w\s]', '', arama_terimi).replace(" ", "_").lower()
         self.arama_klasoru = os.path.join(MAIN_FOLDER, self.klasor_adi)
         os.makedirs(self.arama_klasoru, exist_ok=True)
@@ -39,7 +39,6 @@ class SearchScraper:
                 break
 
             products = self.parser.parse_product_list(html_source)
-
             if not products:
                 print("  Sayfada ürün kartı bulunamadı. Muhtemelen boş bir sayfa.")
                 break
@@ -62,18 +61,23 @@ class SearchScraper:
                 detail_soup = BeautifulSoup(self.driver.page_source, "html.parser")
                 thumbnails = detail_soup.find_all("img", {"class": "_carouselThumbsImage_ddecc3e"})
 
-                # Resimlerin kaydedileceği klasör
+                # Resim klasörü
                 save_folder = os.path.join(self.arama_klasoru, urun_id)
                 os.makedirs(save_folder, exist_ok=True)
 
-                # Thumbnail'ları indir
+                # Thumbnail indir
                 indirilen_resim_sayisi = self.downloader.download(thumbnails, save_folder, urun_id)
                 print(f"   {urun_id} için {indirilen_resim_sayisi} adet resim indirildi.")
 
                 # Ürün detaylarını çek
                 urun_bilgisi = self.parser.parse_product_details(urun_url)
                 if urun_bilgisi:
+                    urun_bilgisi["Size"] = urun_bilgisi.get("Size", [])
+                    urun_bilgisi["Material"] = urun_bilgisi.get("Material", "")
+                    urun_bilgisi["FabricType"] = urun_bilgisi.get("FabricType", "")
+                    urun_bilgisi["Color"] = urun_bilgisi.get("Color", "")
                     urun_bilgisi["image_folder"] = save_folder
+                    urun_bilgisi["search_term"] = self.arama_terimi  # Hangi aramadan geldiğini belirt
                     self.urun_datasi.append(urun_bilgisi)
                     product_count += 1
                     yeni_urun_var = True
@@ -88,10 +92,24 @@ class SearchScraper:
         self.save_data_to_json()
 
     def save_data_to_json(self):
-        """Çekilen verileri JSON dosyasına kaydeder."""
-        json_file_name = f"{self.klasor_adi}.json"
-        json_path = os.path.join(self.arama_klasoru, json_file_name)
+        """Tüm ürünleri ana JSON dosyasına ekler."""
+        json_path = os.path.join(MAIN_FOLDER, "tum_urunler.json")
+
+        # Eski veriyi oku (varsa)
+        if os.path.exists(json_path):
+            with open(json_path, "r", encoding="utf-8") as f:
+                try:
+                    mevcut_veri = json.load(f)
+                except json.JSONDecodeError:
+                    mevcut_veri = []
+        else:
+            mevcut_veri = []
+
+        # Yeni ürünleri ekle
+        mevcut_veri.extend(self.urun_datasi)
+
+        # Yaz
         with open(json_path, "w", encoding="utf-8") as f:
-            import json
-            json.dump(self.urun_datasi, f, ensure_ascii=False, indent=4)
-        print(f"  '{self.arama_terimi}' verileri JSON'a kaydedildi: {json_path}")
+            json.dump(mevcut_veri, f, ensure_ascii=False, indent=4)
+
+        print(f"  Toplam {len(self.urun_datasi)} ürün 'tum_urunler.json' dosyasına eklendi.")

@@ -56,7 +56,6 @@ class ProductParser:
         """Selenium kullanarak fiyat ve indirimli fiyatı bulur."""
         product_info = {"Price": None, "Discount": None}
 
-        # Fiyatı bul
         for css_selector in self.PRICE_CSS_LIST:
             try:
                 price_text = self.driver.find_element(By.CSS_SELECTOR, css_selector).text.strip()
@@ -65,7 +64,6 @@ class ProductParser:
             except NoSuchElementException:
                 continue
 
-        # İndirimli fiyatı bul
         for css_selector in self.DISCOUNT_CSS_LIST:
             try:
                 discount_text = self.driver.find_element(By.CSS_SELECTOR, css_selector).text.strip()
@@ -83,34 +81,17 @@ class ProductParser:
 
     def _parse_with_html(self, driver):
         """Selenium'dan alınan HTML'i BeautifulSoup ile ayrıştırır."""
-
         product_info = {
             "ProductName": None, "Brand": None, "Product": None,
             "Seller": None, "Seller-rating": None, "Price": None,
-            "Discount": None, "Rating": None, "Review Count": "0"
+            "Discount": None, "Rating": None, "Review Count": "0",
+            "Color": None, "FabricType": None, "Size": None, "Material": None
         }
 
         try:
-            # Selenium ile fiyat ve indirimleri bul
             selenium_prices = self._parse_prices_with_selenium()
             product_info.update(selenium_prices)
 
-            # Eğer Selenium ile fiyat bulunamadıysa, BeautifulSoup'a devam et
-            if not product_info["Price"] and not product_info["Discount"]:
-                html_source = driver.page_source
-                soup = BeautifulSoup(html_source, "html.parser")
-                for css_selector in self.PRICE_CSS_LIST:
-                    price_el = soup.select_one(css_selector)
-                    if price_el:
-                        product_info["Price"] = price_el.text.strip()
-                        break
-                for css_selector in self.DISCOUNT_CSS_LIST:
-                    discount_el = soup.select_one(css_selector)
-                    if discount_el:
-                        product_info["Discount"] = discount_el.text.strip()
-                        break
-
-            # Diğer bilgileri BeautifulSoup ile çek
             html_source = driver.page_source
             soup = BeautifulSoup(html_source, "html.parser")
 
@@ -143,11 +124,43 @@ class ProductParser:
                 if match:
                     product_info["Review Count"] = match.group(0)
 
-            # Kritik veri yoksa None döndür
+            # Yeni alanlar: Renk, Kumaş Tipi, Materyal
+            for attr_item in soup.select('div.attribute-item'):
+                name_el = attr_item.select_one('div.name')
+                value_el = attr_item.select_one('div.value')
+                if not name_el or not value_el:
+                    continue
+
+                name = name_el.text.strip()
+                value = value_el.text.strip()
+
+                if name == "Renk":
+                    product_info["Color"] = value
+                elif name == "Materyal":
+                    product_info["Material"] = value
+                elif name == "Kumaş Tipi":
+                    product_info["FabricType"] = value
+
+            # Beden bilgisi (Selenium ile)
+            try:
+                size_buttons = driver.find_elements(By.CSS_SELECTOR, "button[role='radio'].size-box")
+                sizes = []
+                for btn in size_buttons:
+                    try:
+                        text_div = btn.find_element(By.CSS_SELECTOR, "div")
+                        text = text_div.text.strip()
+                        if text:
+                            sizes.append(text)
+                    except:
+                        continue
+                if sizes:
+                    product_info["Size"] = sizes
+            except Exception as e:
+                print(f"Beden alınamadı: {e}")
+
             if not product_info["ProductName"] and not product_info["Price"]:
                 return None
 
-            # Price ve Discount aynı ise Discount'u None yap
             if product_info["Price"] and product_info["Discount"]:
                 if product_info["Price"] == product_info["Discount"]:
                     product_info["Discount"] = None
@@ -165,7 +178,7 @@ class ProductParser:
         final_data = {
             "ScrapingDate": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "URL": url,
-            "PriceToDollar": 0.0
+            "PriceToDollar": None  # Varsayılan değeri None olarak değiştirin
         }
 
         try:
@@ -182,15 +195,18 @@ class ProductParser:
             if html_data:
                 final_data.update(html_data)
 
-                used_price = html_data.get("Discount") if html_data.get("Discount") else html_data.get("Price")
                 usd_rate = get_usd_exchange_rate()
-                try:
-                    if used_price:
+                used_price = html_data.get("Discount") if html_data.get("Discount") else html_data.get("Price")
+
+                # Kur ve fiyatın geçerli olup olmadığını kontrol et
+                if usd_rate is not None and used_price:
+                    try:
                         cleaned_price = float(self._clean_price(used_price))
-                        final_data["PriceToDollar"] = round(cleaned_price / usd_rate, 2) if usd_rate else 0.0
-                except Exception as e:
-                    print(f"Fiyat dolar dönüşümünde hata: {e}")
-                    final_data["PriceToDollar"] = 0.0
+                        final_data["PriceToDollar"] = round(cleaned_price / usd_rate, 2)
+                    except (ValueError, TypeError) as e:
+                        print(f"Fiyat veya kur dönüşümünde hata oluştu: {e}")
+                else:
+                    print("Döviz kuru alınamadı veya fiyat bilgisi eksik.")
 
                 elapsed_time = round(time.time() - start_time, 2)
                 print(f"-> İşlem tamamlandı. Geçen süre: {elapsed_time} saniye\n")
